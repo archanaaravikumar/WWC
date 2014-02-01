@@ -3,8 +3,11 @@ package com.company;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
+
+    private static AtomicInteger atomicInteger;
 
     public static void main(String[] args) {
         String car;
@@ -15,7 +18,15 @@ public class Main {
 
         try {
             String size = bufferRead.readLine();
-            ParkingLot parkingLot = new ParkingLot(Integer.parseInt(size));
+            Attendant attendant = new Attendant();
+            atomicInteger = new AtomicInteger();
+
+
+            ParkingLot parkingLot = new ParkingLot(Integer.parseInt(size), attendant, atomicInteger);
+            ParkingLot parkingLot1 = new ParkingLot(Integer.parseInt(size), attendant,atomicInteger);
+
+            attendant.responsibleFor(parkingLot);
+            attendant.responsibleFor(parkingLot1);
 
             do{
                 System.out.println("1 to park, 2 to unpark, 3 to exit");
@@ -28,7 +39,7 @@ public class Main {
                         car = bufferRead.readLine();
 
                         try{
-                            token = parkingLot.park(car);
+                            token = attendant.park(car);
                             System.out.println("Car parked. Token is " + token );
                         }catch (CannotParkException e) {
                             System.out.println(e.getMessage());
@@ -39,7 +50,7 @@ public class Main {
                         System.out.println("Enter token");
                         token = Integer.parseInt(bufferRead.readLine());
                         try{
-                            parkingLot.unpark(token);
+                            attendant.unpark(token);
                             System.out.println("Car unparked");
                         }catch (CannotUnparkException e) {
                             System.out.println(e.getMessage());

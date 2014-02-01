@@ -19,5 +19,10 @@ public class CannotParkException extends Exception {
                 + " because " + parkingLot + " is full");
     }
 
+    public static CannotParkException becauseAllLotsAreFull(Object car,
+                                                            Attendant attendant) {
+        return new CannotParkException("Cannot park the car " + car + " because all lots managed by " + attendant + " are full");
+    }
+
 }
 

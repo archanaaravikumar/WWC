@@ -7,12 +7,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ParkingLot {
 
     private int capacity;
+    private ParkingLotObservers observers = new ParkingLotObservers();
     private Map<Integer, Object> cars = new HashMap<Integer, Object>();
     private AtomicInteger atomicInteger;
 
-    public ParkingLot(int capacity) {
+    public ParkingLot(int capacity, ParkingLotObserver owner, AtomicInteger atomicInteger) {
         this.capacity = capacity;
-        atomicInteger = new AtomicInteger();
+        observers.add(owner);
+        this.atomicInteger = atomicInteger;
     }
 
     public int park(Object car) throws CannotParkException {
@@ -22,6 +24,8 @@ public class ParkingLot {
             throw CannotParkException.becauseCarIsPresentInLot(car, this);
         int token = atomicInteger.getAndIncrement();
         cars.put(token, car);
+        if (isFull())
+            observers.notifyFull(this);
         return token;
     }
 
@@ -31,6 +35,9 @@ public class ParkingLot {
         }
         Object car = cars.get(token);
         cars.remove(token);
+        if (wasFullBeforeUnpark())
+            observers.notifyHasSpace(this);
+
         return car;
     }
 
@@ -38,11 +45,20 @@ public class ParkingLot {
         return cars.containsValue(car);
     }
 
-    private boolean isFull() {
+    public boolean isFull() {
         return capacity <= cars.size();
     }
 
     public boolean hasCarFor(Object token) {
         return cars.containsKey(token);
     }
+
+    public void addObserver(ParkingLotObserver observer) {
+        observers.add(observer);
+    }
+
+    private boolean wasFullBeforeUnpark() {
+        return capacity - cars.size() == 1;
+    }
+
 }
