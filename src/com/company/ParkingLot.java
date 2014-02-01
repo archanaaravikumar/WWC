@@ -11,9 +11,8 @@ public class ParkingLot {
     private Map<Integer, Object> cars = new HashMap<Integer, Object>();
     private AtomicInteger atomicInteger;
 
-    public ParkingLot(int capacity, ParkingLotObserver owner, AtomicInteger atomicInteger) {
+    public ParkingLot(int capacity, AtomicInteger atomicInteger) {
         this.capacity = capacity;
-        observers.add(owner);
         this.atomicInteger = atomicInteger;
     }
 

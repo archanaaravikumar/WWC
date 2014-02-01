@@ -22,8 +22,8 @@ public class Main {
             atomicInteger = new AtomicInteger();
 
 
-            ParkingLot parkingLot = new ParkingLot(Integer.parseInt(size), attendant, atomicInteger);
-            ParkingLot parkingLot1 = new ParkingLot(Integer.parseInt(size), attendant,atomicInteger);
+            ParkingLot parkingLot = new ParkingLot(Integer.parseInt(size), atomicInteger);
+            ParkingLot parkingLot1 = new ParkingLot(Integer.parseInt(size),atomicInteger);
 
             attendant.responsibleFor(parkingLot);
             attendant.responsibleFor(parkingLot1);
